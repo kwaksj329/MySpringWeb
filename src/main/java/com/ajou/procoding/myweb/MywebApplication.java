@@ -19,29 +19,33 @@ import java.util.List;
 @SpringBootApplication
 @RestController
 public class MywebApplication {
+
+	@Autowired
+	MusicService service;
+
 	public static void main(String[] args) {
 		SpringApplication.run(MywebApplication.class, args);
 	}
-		@Autowired
-		MusicService service;
+	@GetMapping(value = "/musicSearch/{name}")
+	public MusicList musicSearchByPath(@PathVariable String name){
+		return service.searchMusic(name);
+	}
 
-		@GetMapping(value = "/musicSearch/{name}")
-		public MusicList musicSearchByPath(@PathVariable String name){
-			return service.searchMusic(name);
-		}
+	@GetMapping(value="musicSearch")
+	public MusicList musicSearchByParam(@RequestParam(value="term") String name) {
+		return service.searchMusic(name);
+	}
 
-		@GetMapping(value="/musicSearch")
-		public MusicList musicSearchByParam(@RequestParam(value="term") String name) {
-			return service.searchMusic(name);
-		}
+	@GetMapping(value="/likes")  //Get Favorite Music list from Database
+	public List<FavoriteMusic> getLikes() {
+		return service.getLikes();
+	}
 
-		@GetMapping(value="/likes")  //Get Favorite Music list from Database
-		public List<FavoriteMusic> getLikes() {
-			return service.getLikes();
-		}
+	@PostMapping(value="/likes")
+	public int postLikes(@RequestBody FavoriteMusicRequestDto favorite) {
+		return service.saveFavorite(favorite);
+	}
 
-		@PostMapping(value="/likes")
-		public int postLikes(@RequestBody FavoriteMusicRequestDto favorite) {
-			return service.saveFavorite(favorite);
-		}
+	@DeleteMapping(value="/likes/{id}")
+	public int deleteLikes(@PathVariable String id){ return service.deleteFavorite(id);}
 }
