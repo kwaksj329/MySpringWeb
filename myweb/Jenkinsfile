@@ -1,0 +1,40 @@
+pipeline {    
+  agent any    
+  tools {
+    maven 'maven 3.8.5'
+    jdk 'jdk-11.0.14.jdk'
+  }
+  stages {        
+    stage('Prepare') {            
+      agent any
+      steps {
+        checkout scm
+      }
+      post {
+        success {
+          echo 'prepare success'
+        }
+        always {
+          echo 'done prepare'
+        }
+        cleanup { 
+          echo 'after all other post conditions'
+        }
+      }
+    }
+    
+    stage('maven build') {
+      steps {
+        sh  'mvn package' 
+      }
+      post {
+        success {
+          echo 'maven build success' 
+        }
+        failure {
+          echo 'maven build failed' 
+        }
+      }
+    }
+  }
+}
