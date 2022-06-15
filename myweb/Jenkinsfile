@@ -1,5 +1,8 @@
 pipeline {    
   agent any    
+  environment {
+    userId = "kwaksj329"
+  }
   tools {
     maven 'maven 3.8.5'
     jdk 'jdk-11.0.14.jdk'
@@ -16,6 +19,7 @@ pipeline {
         }
         always {
           echo 'done prepare'
+          slackSend (channel: '#devops', color: '#FFFF00', message: "${env.userId} STARTED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
         }
         cleanup { 
           echo 'after all other post conditions'
@@ -38,3 +42,4 @@ pipeline {
     }
   }
 }
+
